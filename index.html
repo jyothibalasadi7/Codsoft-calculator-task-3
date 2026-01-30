@@ -2,25 +2,25 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Creative Calculator Pro</title>
+<title>Calculator with Dark Mode & %</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <style>
-:root {
-    --bg1:#1d2671;
-    --bg2:#c33764;
-    --btn:#444;
-    --text:#ffffff;
-    --panel:#1e1e1e;
-    --heading-bg:#2c2c2c;
+:root{
+    --bg:#f2f4f8;
+    --calc:#ffffff;
+    --text:#000;
+    --btn:#e0e6ed;
+    --hover:#cfd8e3;
+    --op:#4f6ef7;
 }
-
-body.light {
-    --bg1:#f5f7fa;
-    --bg2:#c3cfe2;
-    --btn:#e0e0e0;
-    --text:#000000;
-    --panel:#ffffff;
-    --heading-bg:#e6e6e6;
+body.dark{
+    --bg:#121212;
+    --calc:#1f1f1f;
+    --text:#fff;
+    --btn:#2a2a2a;
+    --hover:#3a3a3a;
+    --op:#ff9800;
 }
 
 body{
@@ -29,228 +29,131 @@ body{
     display:flex;
     justify-content:center;
     align-items:center;
-    background:linear-gradient(135deg,var(--bg1),var(--bg2));
-    font-family:Arial;
+    background:var(--bg);
+    font-family:Arial, sans-serif;
+    transition:0.3s;
 }
-
-.container{display:flex;gap:15px;}
 
 .calculator{
-    background:var(--panel);
+    background:var(--calc);
     padding:20px;
-    border-radius:15px;
-    width:340px;
-    box-shadow:0 15px 40px rgba(0,0,0,0.4);
+    width:300px;
+    border-radius:12px;
+    box-shadow:0 10px 25px rgba(0,0,0,0.4);
     color:var(--text);
 }
 
-.display{
-    height:60px;
-    background:#000;
-    color:#0f0;
-    font-size:28px;
-    padding:10px;
-    border-radius:8px;
-    text-align:right;
-    margin-bottom:10px;
-}
-
-.top-bar{
+.header{
     display:flex;
     justify-content:space-between;
-    align-items:center;
     margin-bottom:10px;
 }
 
-.top-bar strong{
-    color:var(--text);
-    font-size:18px;
-}
-
-.toggle{
-    background:#03a9f4;
+#display{
+    width:100%;
+    height:50px;
+    font-size:22px;
+    text-align:right;
+    padding:10px;
+    margin-bottom:15px;
     border:none;
-    color:white;
-    padding:5px 10px;
-    border-radius:6px;
-    cursor:pointer;
+    border-radius:8px;
+    background:var(--btn);
+    color:var(--text);
 }
 
 .buttons{
     display:grid;
-    grid-template-columns:repeat(5,1fr);
-    gap:8px;
+    grid-template-columns:repeat(4,1fr);
+    gap:10px;
 }
 
 button{
     height:50px;
-    font-size:16px;
+    font-size:18px;
     border:none;
-    border-radius:10px;
+    border-radius:8px;
+    cursor:pointer;
     background:var(--btn);
     color:var(--text);
-    cursor:pointer;
 }
+button:hover{background:var(--hover);}
 
-.operator{background:#ff9800;color:white;}
-.equal{background:#4caf50;color:white;grid-column:span 2;}
-.clear{background:#f44336;color:white;}
-.memory{background:#9c27b0;color:white;}
-.scientific{background:#607d8b;color:white;}
-
-.history{
-    background:var(--panel);
-    color:var(--text);
-    padding:10px;
-    width:220px;
-    border-radius:12px;
-    max-height:430px;
-    overflow-y:auto;
-    box-shadow:0 10px 30px rgba(0,0,0,0.4);
-}
-
-.history h3{
-    text-align:center;
-    margin:0 0 8px 0;
-    padding:8px 0;
-    background:var(--heading-bg);
-    color:var(--text);
-    border-radius:8px;
-    font-size:16px;
-}
-
-.clear-history{
-    width:100%;
-    height:35px;
-    margin-bottom:8px;
-    background:#f44336;
-    color:white;
-    border:none;
-    border-radius:8px;
-    cursor:pointer;
-    font-size:14px;
-}
-
-.history-item{
-    font-size:14px;
-    margin:6px 0;
-    color:var(--text);
-    background:rgba(0,0,0,0.12);
-    padding:6px;
-    border-radius:6px;
-}
+.operator{background:var(--op); color:#fff;}
+.equal{background:#28a745; color:#fff; grid-column:span 2;}
+.clear{background:#dc3545; color:#fff;}
 </style>
 </head>
 
 <body>
 
-<div class="container">
-
 <div class="calculator">
-    <div class="top-bar">
-        <strong>Calculator Pro</strong>
-        <button class="toggle" onclick="toggleTheme()">🌙</button>
+    <div class="header">
+        <b>Calculator</b>
+        <span onclick="toggleMode()" style="cursor:pointer">🌙 / ☀️</span>
     </div>
 
-    <div class="display" id="display">0</div>
+    <input type="text" id="display" disabled>
 
     <div class="buttons">
-        <button class="memory" onclick="memoryClear()">MC</button>
-        <button class="memory" onclick="memoryRecall()">MR</button>
-        <button class="memory" onclick="memoryAdd()">M+</button>
-        <button class="memory" onclick="memorySub()">M-</button>
-        <button onclick="copyResult()">📋</button>
-
-        <button class="scientific" onclick="sqrt()">√</button>
-        <button class="scientific" onclick="square()">x²</button>
-        <button class="scientific" onclick="sin()">sin</button>
-        <button class="scientific" onclick="cos()">cos</button>
-        <button class="scientific" onclick="tan()">tan</button>
-
         <button class="clear" onclick="clearDisplay()">C</button>
-        <button class="clear" onclick="deleteLast()">DEL</button>
-        <button class="operator" onclick="percentage()">%</button>
-        <button class="operator" onclick="appendOperator('/')">÷</button>
-        <button class="operator" onclick="appendOperator('*')">×</button>
+        <button onclick="deleteLast()">DEL</button>
+        <button onclick="percent()">%</button>
+        <button class="operator" onclick="append('/')">÷</button>
 
-        <button onclick="appendValue('7')">7</button>
-        <button onclick="appendValue('8')">8</button>
-        <button onclick="appendValue('9')">9</button>
-        <button class="operator" onclick="appendOperator('-')">−</button>
-        <button class="scientific" onclick="log()">log</button>
+        <button onclick="append('7')">7</button>
+        <button onclick="append('8')">8</button>
+        <button onclick="append('9')">9</button>
+        <button class="operator" onclick="append('*')">×</button>
 
-        <button onclick="appendValue('4')">4</button>
-        <button onclick="appendValue('5')">5</button>
-        <button onclick="appendValue('6')">6</button>
-        <button class="operator" onclick="appendOperator('+')">+</button>
+        <button onclick="append('4')">4</button>
+        <button onclick="append('5')">5</button>
+        <button onclick="append('6')">6</button>
+        <button class="operator" onclick="append('-')">−</button>
 
-        <button onclick="appendValue('1')">1</button>
-        <button onclick="appendValue('2')">2</button>
-        <button onclick="appendValue('3')">3</button>
-        <button onclick="appendValue('.')">.</button>
+        <button onclick="append('1')">1</button>
+        <button onclick="append('2')">2</button>
+        <button onclick="append('3')">3</button>
+        <button class="operator" onclick="append('+')">+</button>
+
+        <button onclick="append('0')">0</button>
+        <button onclick="append('.')">.</button>
         <button class="equal" onclick="calculate()">=</button>
-
-        <button onclick="appendValue('0')" style="grid-column:span 5;">0</button>
     </div>
-</div>
-
-<div class="history">
-    <h3>History</h3>
-    <button class="clear-history" onclick="clearHistory()">Clear History</button>
-    <div id="historyList"></div>
-</div>
-
 </div>
 
 <script>
-const display=document.getElementById("display");
-const historyList=document.getElementById("historyList");
-let memory=0;
+let display = document.getElementById("display");
 
-function appendValue(v){
-    if(display.innerText==="0") display.innerText=v;
-    else display.innerText+=v;
+function append(val){
+    display.value += val;
 }
 
-function appendOperator(op){
-    if("+-*/".includes(display.innerText.slice(-1))) return;
-    display.innerText+=op;
+function clearDisplay(){
+    display.value="";
 }
 
-function clearDisplay(){display.innerText="0";}
-function deleteLast(){display.innerText=display.innerText.slice(0,-1)||"0";}
+function deleteLast(){
+    display.value = display.value.slice(0,-1);
+}
+
+function percent(){
+    if(display.value !== ""){
+        display.value = display.value / 100;
+    }
+}
 
 function calculate(){
     try{
-        let exp=display.innerText;
-        let result=eval(exp);
-        result=parseFloat(result.toFixed(8));
-        historyList.innerHTML =
-            `<div class="history-item">${exp} = ${result}</div>` +
-            historyList.innerHTML;
-        display.innerText=result;
-    }catch{display.innerText="Error";}
+        display.value = eval(display.value);
+    }catch{
+        display.value="Error";
+    }
 }
 
-function clearHistory(){
-    historyList.innerHTML="";
+function toggleMode(){
+    document.body.classList.toggle("dark");
 }
-
-function percentage(){display.innerText=display.innerText/100;}
-function sqrt(){display.innerText=Math.sqrt(display.innerText);}
-function square(){display.innerText=Math.pow(display.innerText,2);}
-function sin(){display.innerText=Math.sin(display.innerText);}
-function cos(){display.innerText=Math.cos(display.innerText);}
-function tan(){display.innerText=Math.tan(display.innerText);}
-function log(){display.innerText=Math.log10(display.innerText);}
-
-function memoryClear(){memory=0;}
-function memoryRecall(){display.innerText=memory;}
-function memoryAdd(){memory+=Number(display.innerText);}
-function memorySub(){memory-=Number(display.innerText);}
-
-function copyResult(){navigator.clipboard.writeText(display.innerText);}
-function toggleTheme(){document.body.classList.toggle("light");}
 </script>
 
 </body>
